@@ -1,0 +1,30 @@
+{
+  "name": "server-pim",
+  "version": "1.0.0",
+  "description": "Servidor desenvolvido para o PIM de ADS - UNIP 2019",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiogdionisio/server-pim.git"
+  },
+  "author": "Fabio Dionisio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabiogdionisio/server-pim/issues"
+  },
+  "homepage": "https://github.com/fabiogdionisio/server-pim#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql": "^2.17.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "nodemon": "^1.19.1"
+  }
+}
