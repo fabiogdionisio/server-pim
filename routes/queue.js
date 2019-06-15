@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const pswrdController = require('../controllers/pswrdController');
+const queueController = require('../controllers/queueController');
 
-router.post('/', pswrdController.createPswrd);
+router.get('/', queueController.getCurrentQueue);
 // router.get('/', pswrdController.getAllPswrd);
 // router.get('/:id', pswrdController.getPswrd);
 // router.put('/:id', pswrdController.getPswrd);

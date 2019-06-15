@@ -37,4 +37,17 @@ exports.getPswrd = (pswrd) => {
             resolve(result.insertId);
         }); 
     });
-}
+};
+
+exports.getOpenPswrds = (id) => {
+
+    return new Promise( (resolve, reject) => {
+
+        let sql = `SELECT * FROM pswrd WHERE queue = ${id} AND status = 'aberto'`;
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result);
+        }); 
+    });
+};
