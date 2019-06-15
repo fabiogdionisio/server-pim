@@ -17,7 +17,7 @@ exports.createPswrd = (queueId, type, service, count) => {
 
     return new Promise( (resolve, reject) => {
 
-        let sql = `INSERT INTO pswrd (queue, type, service, number, status) VALUES (${queueId}, ${type}, ${service}, '${count}', 'aberto')`;
+        let sql = `INSERT INTO pswrd (queue, type, service, number, status, time_created) VALUES (${queueId}, ${type}, ${service}, '${count}', 'aberto', CURTIME())`;
         connection.query(sql, (err, result) => {
 
             if(err) return reject(err);
