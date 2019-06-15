@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/pswrdController');
+const pswrdController = require('../controllers/pswrdController');
 
-router.post('/', controller.createPswrd);
+router.post('/', pswrdController.createPswrd);
 // router.post('/', controller.createPswrd);
 
 module.exports = router;

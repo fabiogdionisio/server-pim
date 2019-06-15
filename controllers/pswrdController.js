@@ -1,18 +1,24 @@
-const model = require('../models/PswrdModel');
+const PswrdModel = require('../models/PswrdModel');
+const QueueModel = require('../models/QueueModel');
 
-exports.createPswrd = (req, res) => {
-    let type = req.params.type;
-    let service = req.params.service;
-    
+exports.createPswrd = async (req, res) => {
+    let type = req.body.type;
+    let service = req.body.service;
+
     // Check if there is a queue 
-    model.queueIsSet( (response) => {
-        let queueId = response[0].id;
-        
-         
-        // If yes, generate new password,
-        model.createPswrd(queueId, type, service, response) {
+    // If false, creates a queue
+    let queueId = await QueueModel.queueIsSet();
+    if (!queueId) queueId = await QueueModel.createQueue();
 
-        };
-        // Else create a queue then generate a password.
-    });
+    // Count the number of existed password to generate the new password number;
+    let count = await PswrdModel.countPswrd(queueId) + 1;
+
+    // Finally creates the password and return to the user;
+    let pswrd = await PswrdModel.createPswrd(queueId, type, service, count);
+    let result = {
+        message: 'Senha criada com sucesso',
+        pswrd: pswrd
+    };
+
+    res.json(result);
 };

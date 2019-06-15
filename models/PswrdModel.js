@@ -1,23 +1,40 @@
 const connection = require('../config/database.js');
 
- // CHECKS IF THERE IS A QUEUE
-exports.queueIsSet = callback => {
+exports.countPswrd = (queueId) => {
 
-    let sql = 'SELECT * FROM `queue` WHERE date = CURDATE()';
+    return new Promise( (resolve, reject) => {
 
-    connection.query(sql, (err, result) => {
-        if(err) throw err;
-        return callback(result);
-    }); 
+        let sql = 'SELECT COUNT(*) as count FROM `pswrd` WHERE `queue` = ' + queueId;
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result[0].count);
+        }); 
+    });
 };
 
- // CREATE A PASSWPRD
- exports.createPswrd = (type, service, callback) => {
+exports.createPswrd = (queueId, type, service, count) => {
 
-    let sql = ``;
+    return new Promise( (resolve, reject) => {
 
-    connection.query(sql, (err, result) => {
-        if(err) throw err;
-        return callback(result);
-    }); 
+        let sql = `INSERT INTO pswrd (queue, type, service, number, status) VALUES (${queueId}, ${type}, ${service}, '${count}', 'aberto')`;
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result.insertId);
+        }); 
+    });
 };
+
+exports.getPswrd = (pswrd) => {
+
+    return new Promise( (resolve, reject) => {
+
+        let sql = 'SELECT `number` FROM `pswrd` WHERE `id` = ' + pswrd;
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result.insertId);
+        }); 
+    });
+}
