@@ -12,9 +12,44 @@ exports.getCurrentQueue = async (req, res) => {
 
 exports.callNextPswrd = async (req, res) => {
 
-    // Get all the open passwords for the current day
+    let delayedPswrd, prefPswrd, nextPswrd, result = '';
     let queue = await QueueModel.queueIsSet();
-    let result = await PswrdModel.callNextPswrd(queue);
 
-    res.json(result);
+    // Check if there is a password created more than 15 minutes ago and call it,
+    delayedPswrd = await PswrdModel.getDelayedPswrd(queue);
+    if (delayedPswrd) result = await PswrdModel.callPswrd(delayedPswrd.id);
+
+    // If there isn't, call a preferential one
+    if (!delayedPswrd) prefPswrd = await PswrdModel.getPrefPswrd(queue);
+    if (prefPswrd) result = await PswrdModel.callPswrd(prefPswrd.id);
+
+    // If there ins't a preferential one, call a common one.
+    if (!prefPswrd && !delayedPswrd) nextPswrd = await PswrdModel.getNextPswrd(queue);
+    if (nextPswrd) result = await PswrdModel.callPswrd(nextPswrd.id);
+
+    // Return the response for the user
+    if (result) {
+
+        let calledPswrd = '';
+
+        if (delayedPswrd) calledPswrd = delayedPswrd;
+        if (prefPswrd) calledPswrd = prefPswrd;
+        if (nextPswrd) calledPswrd = nextPswrd;
+
+        let response = {
+            message: 'Senha chamada com sucesso',
+            pswrd: calledPswrd
+        };
+
+        res.json(response);
+
+    } else {
+
+        let response = {
+            message: 'Nenhuma senha encontrada para ser chamada',
+        };
+
+        res.statusCode = 404;
+        res.send(response);
+    }
 };

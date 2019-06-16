@@ -26,11 +26,11 @@ exports.createPswrd = (queueId, type, service, count) => {
     });
 };
 
-exports.getPswrd = (pswrd) => {
-
+exports.getPswrd = (pswrdId) => {
+    
     return new Promise( (resolve, reject) => {
 
-        let sql = 'SELECT `number` FROM `pswrd` WHERE `id` = ' + pswrd;
+        let sql = `SELECT * FROM pswrd WHERE id = ${pswrdId}`;
         connection.query(sql, (err, result) => {
 
             if(err) return reject(err);
@@ -39,11 +39,11 @@ exports.getPswrd = (pswrd) => {
     });
 };
 
-exports.getOpenPswrds = (id) => {
+exports.getOpenPswrds = (queueId) => {
 
     return new Promise( (resolve, reject) => {
 
-        let sql = `SELECT * FROM pswrd WHERE queue = ${id} AND status = 'aberto'`;
+        let sql = `SELECT * FROM pswrd WHERE queue = ${queueId} AND status = 'aberto'`;
         connection.query(sql, (err, result) => {
 
             if(err) return reject(err);
@@ -51,3 +51,72 @@ exports.getOpenPswrds = (id) => {
         }); 
     });
 };
+
+exports.getDelayedPswrd = (queueId) => {
+    
+    return new Promise( (resolve, reject) => {
+
+        let sql = `SELECT * FROM pswrd 
+        WHERE pswrd.queue = ${queueId}
+        AND pswrd.time_created < DATE_SUB( NOW() , INTERVAL 15 MINUTE ) 
+        AND pswrd.status = 'aberto'
+        LIMIT 1`;
+
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result[0]);
+        }); 
+    });
+};
+
+exports.getPrefPswrd = (queueId) => {
+    
+    return new Promise( (resolve, reject) => {
+
+        let sql = `SELECT * FROM pswrd 
+                   WHERE queue = ${queueId} 
+                   AND status = 'aberto' 
+                   AND type = 2 
+                   LIMIT 1`;
+
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result[0]);
+        }); 
+    });
+};
+
+exports.getNextPswrd = (queueId) => {
+    
+    return new Promise( (resolve, reject) => {
+
+        let sql = `SELECT * FROM pswrd WHERE queue = ${queueId} AND status = 'aberto' LIMIT 1`;
+
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result[0]);
+        }); 
+    });
+};
+
+exports.callPswrd = (pswrd) => {
+
+    return new Promise( (resolve, reject) => {
+
+        let sql = `UPDATE pswrd 
+                   SET status = 'chamado',
+                   time_called = CURTIME()
+                   WHERE id = ${pswrd}`;
+                   
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result);
+        }); 
+    });
+};
+
+
