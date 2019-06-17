@@ -53,7 +53,7 @@ exports.getCalledPswrds = (queueId) => {
                    WHERE queue = ${queueId}
                    AND status = 'chamado'
                    AND time_served IS NULL
-                   ORDER BY time_called DESC
+                   ORDER BY time_called ASC
                    LIMIT 1`;
         connection.query(sql, (err, result) => {
 
