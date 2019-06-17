@@ -43,7 +43,8 @@ exports.getCalledPswrds = (queueId) => {
     
     return new Promise( (resolve, reject) => {
 
-        let sql = `SELECT type.initials as type, 
+        let sql = `SELECT pswrd.id as id,
+                   type.initials as type, 
                    service.initials as service,
                    pswrd.number as number
                    FROM ((pswrd 
@@ -51,11 +52,13 @@ exports.getCalledPswrds = (queueId) => {
                    INNER JOIN service ON pswrd.service = service.id)
                    WHERE queue = ${queueId}
                    AND status = 'chamado'
-                   ORDER BY time_called DESC`;
+                   AND time_served IS NULL
+                   ORDER BY time_called DESC
+                   LIMIT 1`;
         connection.query(sql, (err, result) => {
 
             if(err) return reject(err);
-            resolve(result);
+            resolve(result[0]);
         }); 
     });
 };
@@ -140,4 +143,16 @@ exports.callPswrd = (pswrd) => {
     });
 };
 
+exports.alterServedPswrd = (pswrdId) => {
+    
+    return new Promise( (resolve, reject) => {
 
+        let sql = `UPDATE pswrd SET time_served = CURTIME() where id = ${pswrdId}`;
+
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result[0]);
+        }); 
+    });
+};

@@ -22,3 +22,13 @@ exports.createPswrd = async (req, res) => {
 
     res.json(result);
 };
+
+exports.servePswrd = async (req, res) => {
+
+    // Get all the called passwords for the current day
+    let queue = await QueueModel.queueIsSet();
+    let result = await PswrdModel.getCalledPswrds(queue);
+    if (result) await PswrdModel.alterServedPswrd(result.id);
+
+    res.json(result);
+};

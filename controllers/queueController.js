@@ -50,15 +50,6 @@ exports.callNextPswrd = async (req, res) => {
         };
 
         res.statusCode = 404;
-        res.send(response);
+        res.json(response);
     }
-};
-
-exports.getCalledQueue = async (req, res) => {
-
-    // Get all the called passwords for the current day
-    let queue = await QueueModel.queueIsSet();
-    let result = await PswrdModel.getCalledPswrds(queue);
-
-    res.json(result);
 };
