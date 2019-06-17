@@ -34,7 +34,7 @@ exports.getPswrd = (pswrdId) => {
         connection.query(sql, (err, result) => {
 
             if(err) return reject(err);
-            resolve(result.insertId);
+            resolve(result[0]);
         }); 
     });
 };

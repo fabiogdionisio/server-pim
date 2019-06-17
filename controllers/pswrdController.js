@@ -14,10 +14,12 @@ exports.createPswrd = async (req, res) => {
     let count = await PswrdModel.countPswrd(queueId) + 1;
 
     // Finally creates the password and return to the user;
-    let pswrd = await PswrdModel.createPswrd(queueId, type, service, count);
+    let pswrdId = await PswrdModel.createPswrd(queueId, type, service, count);
+    let createPswrd = await PswrdModel.getPswrd(pswrdId);
+
     let result = {
         message: 'Senha criada com sucesso',
-        pswrd: pswrd
+        pswrd: createPswrd.number 
     };
 
     res.json(result);
