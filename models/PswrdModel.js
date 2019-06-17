@@ -39,6 +39,27 @@ exports.getPswrd = (pswrdId) => {
     });
 };
 
+exports.getCalledPswrds = (queueId) => {
+    
+    return new Promise( (resolve, reject) => {
+
+        let sql = `SELECT type.initials as type, 
+                   service.initials as service,
+                   pswrd.number as number
+                   FROM ((pswrd 
+                   INNER JOIN type ON pswrd.type = type.id)
+                   INNER JOIN service ON pswrd.service = service.id)
+                   WHERE queue = ${queueId}
+                   AND status = 'chamado'
+                   ORDER BY time_called DESC`;
+        connection.query(sql, (err, result) => {
+
+            if(err) return reject(err);
+            resolve(result);
+        }); 
+    });
+};
+
 exports.getOpenPswrds = (queueId) => {
 
     return new Promise( (resolve, reject) => {

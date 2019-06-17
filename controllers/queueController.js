@@ -27,7 +27,7 @@ exports.callNextPswrd = async (req, res) => {
     if (!prefPswrd && !delayedPswrd) nextPswrd = await PswrdModel.getNextPswrd(queue);
     if (nextPswrd) result = await PswrdModel.callPswrd(nextPswrd.id);
 
-    // Return the response for the user
+    // Return the response to the user
     if (result) {
 
         let calledPswrd = '';
@@ -52,4 +52,13 @@ exports.callNextPswrd = async (req, res) => {
         res.statusCode = 404;
         res.send(response);
     }
+};
+
+exports.getCalledQueue = async (req, res) => {
+
+    // Get all the called passwords for the current day
+    let queue = await QueueModel.queueIsSet();
+    let result = await PswrdModel.getCalledPswrds(queue);
+
+    res.json(result);
 };
