@@ -6,6 +6,7 @@ router.get('/', queueController.getCurrentQueue);
 // router.get('/', pswrdController.getAllPswrd);
 // router.get('/:id', pswrdController.getPswrd);
 router.put('/', queueController.callNextPswrd);
+router.post('/', queueController.callPswrd);
 // router.delete('/:id', pswrdController.getPswrd);
 
 module.exports = router;

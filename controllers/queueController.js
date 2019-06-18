@@ -53,3 +53,11 @@ exports.callNextPswrd = async (req, res) => {
         res.json(response);
     }
 };
+
+exports.callPswrd = async (req, res) => {
+
+    let pswrd = req.body.pswrd;
+    let result = await PswrdModel.callPswrd(pswrd);
+
+    res.json(result);
+};
